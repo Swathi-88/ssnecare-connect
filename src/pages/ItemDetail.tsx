@@ -203,7 +203,14 @@ const ItemDetail = () => {
                 {item.category === "buy" ? "Looking For" : `For ${item.category}`}
               </Badge>
               <h1 className="text-3xl font-bold mb-2">{item.title}</h1>
-              <p className="text-4xl font-bold text-primary mb-4">₹{item.price}</p>
+              <div className="mb-4">
+                <p className="text-4xl font-bold text-primary">₹{item.price}</p>
+                {item.category !== "buy" && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Seller receives: ₹{(item.price * 0.9).toFixed(2)} (after 10% platform fee)
+                  </p>
+                )}
+              </div>
 
               {item.condition && (
                 <div className="flex items-center gap-2 mb-4">

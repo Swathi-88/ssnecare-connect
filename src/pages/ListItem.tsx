@@ -149,7 +149,9 @@ const ListItem = () => {
         <Card>
           <CardHeader>
             <CardTitle>List an Item</CardTitle>
-            <CardDescription>Share what you want to sell, rent, or are looking for</CardDescription>
+            <CardDescription>
+              Share what you want to sell, rent, or are looking for. A 10% platform fee applies to all transactions.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -224,6 +226,16 @@ const ListItem = () => {
                   onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                   required
                 />
+                {formData.price && parseFloat(formData.price) > 0 && (
+                  <div className="text-sm space-y-1 p-3 bg-muted/50 rounded-md border">
+                    <p className="text-muted-foreground">
+                      <span className="font-medium">Platform fee (10%):</span> ₹{(parseFloat(formData.price) * 0.1).toFixed(2)}
+                    </p>
+                    <p className="font-medium text-foreground">
+                      You'll receive: ₹{(parseFloat(formData.price) * 0.9).toFixed(2)}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Condition */}
