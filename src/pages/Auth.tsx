@@ -70,7 +70,7 @@ const Auth = () => {
           <div className="mx-auto w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mb-2">
             <ShoppingBag className="w-6 h-6 text-white" />
           </div>
-          <CardTitle className="text-2xl font-bold">Campus Marketplace</CardTitle>
+          <CardTitle className="text-2xl font-bold">Dripster</CardTitle>
           <CardDescription>
             {isSignUp ? "Create your account" : "Sign in to your account"}
           </CardDescription>
