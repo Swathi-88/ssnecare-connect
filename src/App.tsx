@@ -10,6 +10,7 @@ import ItemDetail from "./pages/ItemDetail";
 import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
 import Chat from "./pages/Chat";
+import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Marketplace />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/search" element={<Search />} />
           <Route path="/list-item" element={<ListItem />} />
           <Route path="/item/:id" element={<ItemDetail />} />
           <Route path="/profile" element={<Profile />} />
