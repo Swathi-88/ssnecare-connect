@@ -8,7 +8,18 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
-import { MapPin, MessageCircle, Package } from "lucide-react";
+import { MapPin, MessageCircle, Package, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const ItemDetail = () => {
@@ -108,6 +119,22 @@ const ItemDetail = () => {
       toast.error("Failed to start conversation");
     } else {
       navigate(`/chat/${data.id}`);
+    }
+  };
+
+  const handleDeleteItem = async () => {
+    if (!item) return;
+
+    const { error } = await supabase
+      .from("items")
+      .delete()
+      .eq("id", item.id);
+
+    if (error) {
+      toast.error("Failed to delete item");
+    } else {
+      toast.success("Item deleted successfully");
+      navigate("/profile");
     }
   };
 
@@ -220,8 +247,8 @@ const ItemDetail = () => {
               </CardContent>
             </Card>
 
-            {/* Action Button */}
-            {!isOwner && (
+            {/* Action Buttons */}
+            {!isOwner ? (
               <Button
                 onClick={handleContact}
                 className="w-full bg-gradient-to-r from-primary to-secondary"
@@ -230,6 +257,29 @@ const ItemDetail = () => {
                 <MessageCircle className="mr-2 h-5 w-5" />
                 Contact Seller
               </Button>
+            ) : (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" className="w-full" size="lg">
+                    <Trash2 className="mr-2 h-5 w-5" />
+                    Delete Item
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete this item?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete your item listing.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDeleteItem} className="bg-destructive text-destructive-foreground">
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
           </div>
         </div>

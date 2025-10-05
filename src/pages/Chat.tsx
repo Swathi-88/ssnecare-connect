@@ -126,8 +126,16 @@ const Chat = () => {
           table: "messages",
           filter: `conversation_id=eq.${conversationId}`,
         },
-        (payload) => {
-          fetchMessages();
+        async (payload) => {
+          // Fetch sender info for the new message
+          const { data: sender } = await supabase
+            .from("profiles")
+            .select("full_name, avatar_url")
+            .eq("id", payload.new.sender_id)
+            .single();
+          
+          // Append new message instead of refetching all
+          setMessages((prev) => [...prev, { ...payload.new, sender }]);
         }
       )
       .subscribe();
