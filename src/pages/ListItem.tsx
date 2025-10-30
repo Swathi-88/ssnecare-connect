@@ -10,12 +10,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Upload, X, Loader2 } from "lucide-react";
+import { Upload, X, Loader2, Sparkles } from "lucide-react";
 
 const ListItem = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [enhancing, setEnhancing] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const navigate = useNavigate();
@@ -139,6 +140,37 @@ const ListItem = () => {
     }
   };
 
+  const handleEnhanceDescription = async () => {
+    if (!formData.title && !formData.description) {
+      toast.error("Please add a title or description first");
+      return;
+    }
+
+    setEnhancing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('enhance-description', {
+        body: {
+          description: formData.description,
+          title: formData.title,
+          category: formData.category,
+          condition: formData.condition,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.enhancedDescription) {
+        setFormData({ ...formData, description: data.enhancedDescription });
+        toast.success("Description enhanced with AI!");
+      }
+    } catch (error: any) {
+      console.error('Enhancement error:', error);
+      toast.error(error.message || "Failed to enhance description");
+    } finally {
+      setEnhancing(false);
+    }
+  };
+
   if (!session || !profile) return null;
 
   return (
@@ -257,10 +289,32 @@ const ListItem = () => {
 
               {/* Description */}
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="description">Description</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleEnhanceDescription}
+                    disabled={enhancing || (!formData.title && !formData.description)}
+                    className="gap-2"
+                  >
+                    {enhancing ? (
+                      <>
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        Enhancing...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-3 w-3" />
+                        Enhance with AI
+                      </>
+                    )}
+                  </Button>
+                </div>
                 <Textarea
                   id="description"
-                  placeholder="Describe your item..."
+                  placeholder="Describe your item... or use AI to generate one!"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
