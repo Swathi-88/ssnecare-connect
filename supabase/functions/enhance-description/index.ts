@@ -28,20 +28,20 @@ serve(async (req) => {
       );
     }
 
-    const systemPrompt = `You are a product description expert. Your task is to create short, crisp, and compelling product descriptions that are:
-- Concise (2-3 sentences maximum)
-- Highlight key features and benefits
-- Use clear, simple language
-- Are persuasive but honest
-- Include relevant details about condition if mentioned`;
+    const systemPrompt = `You are a product description expert. Create ONLY 2 short sentences that are compelling and highlight key features. Be concise and direct. Do not provide options or multiple versions.`;
 
-    const userPrompt = `Enhance this product listing:
+    const userPrompt = `Create a 2-sentence product description for:
 Title: ${title || 'Not provided'}
 Category: ${category || 'Not specified'}
 Condition: ${condition || 'Not specified'}
 Current Description: ${description || 'No description yet'}
 
-Create a short, crisp, and compelling description (2-3 sentences maximum) that will attract buyers.`;
+Requirements:
+- EXACTLY 2 sentences
+- Short and crisp
+- Highlight key features
+- No options or alternatives
+- Direct and compelling`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
