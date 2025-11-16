@@ -68,11 +68,10 @@ const ItemDetail = () => {
       .from("items")
       .select(`
         *,
-        profiles:seller_id (
+        public_profiles:seller_id (
           id,
           full_name,
-          avatar_url,
-          email
+          avatar_url
         )
       `)
       .eq("id", id)
@@ -241,14 +240,13 @@ const ItemDetail = () => {
                 <h3 className="font-semibold mb-4">Seller Information</h3>
                 <div className="flex items-center gap-4">
                   <Avatar>
-                    <AvatarImage src={item.profiles?.avatar_url} />
+                    <AvatarImage src={item.public_profiles?.avatar_url} />
                     <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-white">
-                      {item.profiles?.full_name?.[0]?.toUpperCase()}
+                      {item.public_profiles?.full_name?.[0]?.toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium">{item.profiles?.full_name || "Anonymous"}</p>
-                    <p className="text-sm text-muted-foreground">{item.profiles?.email}</p>
+                    <p className="font-medium">{item.public_profiles?.full_name || "Anonymous"}</p>
                   </div>
                 </div>
               </CardContent>
