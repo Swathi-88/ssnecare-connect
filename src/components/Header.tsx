@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ShoppingBag, LogOut, User, MessageSquare, PlusCircle, Search } from "lucide-react";
+import { ShoppingBag, LogOut, User, PlusCircle, Search } from "lucide-react";
 import { toast } from "sonner";
 
 interface HeaderProps {
@@ -48,15 +48,6 @@ const Header = ({ user, profile }: HeaderProps) => {
             className="hover:bg-primary/10"
           >
             <Search className="h-5 w-5" />
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/messages")}
-            className="hover:bg-primary/10"
-          >
-            <MessageSquare className="h-5 w-5" />
           </Button>
 
           <Button

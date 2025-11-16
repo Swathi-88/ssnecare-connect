@@ -8,8 +8,6 @@ import Marketplace from "./pages/Marketplace";
 import ListItem from "./pages/ListItem";
 import ItemDetail from "./pages/ItemDetail";
 import Profile from "./pages/Profile";
-import Messages from "./pages/Messages";
-import Chat from "./pages/Chat";
 import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
 
@@ -28,8 +26,6 @@ const App = () => (
           <Route path="/list-item" element={<ListItem />} />
           <Route path="/item/:id" element={<ItemDetail />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/chat/:conversationId" element={<Chat />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
