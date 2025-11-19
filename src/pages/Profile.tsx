@@ -131,31 +131,31 @@ const Profile = () => {
   if (!session || !profile) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen gradient-mesh">
       <Header user={session.user} profile={profile} />
 
-      <main className="container py-6 max-w-4xl">
-        <Card className="mb-6">
+      <main className="container py-8 max-w-5xl animate-fade-in">
+        <Card className="mb-8 shadow-elegant-lg border-2 glass">
           <CardHeader>
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <Avatar className="h-20 w-20">
+            <div className="flex items-center gap-6">
+              <div className="relative group">
+                <Avatar className="h-24 w-24 border-4 border-primary/20 shadow-glow">
                   <AvatarImage src={profile.avatar_url} />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-white text-2xl">
+                  <AvatarFallback className="gradient-primary text-white text-3xl">
                     {profile.full_name?.[0]?.toUpperCase() || session.user.email?.[0]?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <Button
                   size="icon"
                   variant="outline"
-                  className="absolute bottom-0 right-0 h-8 w-8 rounded-full"
+                  className="absolute bottom-0 right-0 h-10 w-10 rounded-full shadow-lg gradient-primary text-white hover:scale-110 transition-smooth border-2"
                 >
-                  <Camera className="h-4 w-4" />
+                  <Camera className="h-5 w-5" />
                 </Button>
               </div>
               <div className="flex-1">
-                <CardTitle>{profile.full_name || "Anonymous"}</CardTitle>
-                <CardDescription>{session.user.email}</CardDescription>
+                <CardTitle className="text-3xl gradient-primary bg-clip-text text-transparent">{profile.full_name || "Anonymous"}</CardTitle>
+                <CardDescription className="text-base">{session.user.email}</CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -202,10 +202,10 @@ const Profile = () => {
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="items">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="items">My Listings</TabsTrigger>
-            <TabsTrigger value="history">Transaction History</TabsTrigger>
+        <Tabs defaultValue="items" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 h-14 p-1 bg-card shadow-elegant">
+            <TabsTrigger value="items" className="transition-smooth data-[state=active]:shadow-md data-[state=active]:gradient-primary data-[state=active]:text-white text-base">My Listings</TabsTrigger>
+            <TabsTrigger value="history" className="transition-smooth data-[state=active]:shadow-md data-[state=active]:gradient-primary data-[state=active]:text-white text-base">Transaction History</TabsTrigger>
           </TabsList>
 
           <TabsContent value="items" className="mt-6">

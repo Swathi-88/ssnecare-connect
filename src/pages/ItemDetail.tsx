@@ -157,39 +157,41 @@ const ItemDetail = () => {
   const isOwner = item.seller_id === session.user.id;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen gradient-mesh">
       <Header user={session.user} profile={profile} />
 
-      <main className="container py-6 max-w-4xl">
-        <div className="grid gap-6 lg:grid-cols-2">
+      <main className="container py-8 max-w-5xl animate-fade-in">
+        <div className="grid gap-8 lg:grid-cols-2">
           {/* Images */}
           <div>
-            <Card className="overflow-hidden">
+            <Card className="overflow-hidden shadow-elegant-lg border-2">
               {item.image_urls && item.image_urls.length > 0 ? (
                 <Carousel className="w-full">
                   <CarouselContent>
                     {item.image_urls.map((url: string, index: number) => (
                       <CarouselItem key={index}>
-                        <div className="aspect-square">
+                        <div className="aspect-square relative overflow-hidden">
                           <img
                             src={url}
                             alt={`${item.title} ${index + 1}`}
                             className="w-full h-full object-cover"
                           />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                         </div>
                       </CarouselItem>
                     ))}
                   </CarouselContent>
                   {item.image_urls.length > 1 && (
                     <>
-                      <CarouselPrevious className="left-2" />
-                      <CarouselNext className="right-2" />
+                      <CarouselPrevious className="left-4 shadow-lg" />
+                      <CarouselNext className="right-4 shadow-lg" />
                     </>
                   )}
                 </Carousel>
               ) : (
-                <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
-                  <Package className="h-24 w-24 text-muted-foreground" />
+                <div className="aspect-square bg-gradient-to-br from-muted via-muted/80 to-muted/50 flex items-center justify-center relative">
+                  <div className="absolute inset-0 gradient-mesh opacity-30" />
+                  <Package className="h-32 w-32 text-muted-foreground/40 relative z-10" />
                 </div>
               )}
             </Card>
@@ -198,44 +200,46 @@ const ItemDetail = () => {
           {/* Details */}
           <div className="space-y-6">
             <div>
-              <Badge className={`mb-2 ${getCategoryColor(item.category)}`}>
+              <Badge className={`mb-3 ${getCategoryColor(item.category)} shadow-md backdrop-blur-sm text-base px-4 py-1`}>
                 {item.category === "buy" ? "Looking For" : `For ${item.category}`}
               </Badge>
-              <h1 className="text-3xl font-bold mb-2">{item.title}</h1>
-              <div className="mb-4">
-                <p className="text-4xl font-bold text-primary">₹{item.price}</p>
+              <h1 className="text-4xl font-bold mb-4 gradient-primary bg-clip-text text-transparent">{item.title}</h1>
+              <div className="mb-6">
+                <p className="text-5xl font-bold gradient-primary bg-clip-text text-transparent">₹{item.price}</p>
                 {item.category !== "buy" && (
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-sm text-muted-foreground mt-2">
                     Seller receives: ₹{(item.price * 0.9).toFixed(2)} (after 10% platform fee)
                   </p>
                 )}
               </div>
 
               {item.condition && (
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-sm text-muted-foreground">Condition:</span>
-                  <Badge variant="outline">{item.condition}</Badge>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-sm text-muted-foreground font-medium">Condition:</span>
+                  <Badge variant="outline" className="transition-smooth hover:bg-primary/10">{item.condition}</Badge>
                 </div>
               )}
 
               {item.location && (
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="h-4 w-4" />
-                  <span className="text-sm">{item.location}</span>
+                  <MapPin className="h-5 w-5" />
+                  <span>{item.location}</span>
                 </div>
               )}
             </div>
 
             {/* Description */}
             {item.description && (
-              <div>
-                <h3 className="font-semibold mb-2">Description</h3>
-                <p className="text-muted-foreground whitespace-pre-wrap">{item.description}</p>
-              </div>
+              <Card className="glass shadow-md border-2">
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold mb-3 text-lg">Description</h3>
+                  <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">{item.description}</p>
+                </CardContent>
+              </Card>
             )}
 
             {/* Seller Info */}
-            <Card>
+            <Card className="glass shadow-md border-2">
               <CardContent className="pt-6">
                 <h3 className="font-semibold mb-4">Seller Information</h3>
                 <div className="flex items-center gap-4">

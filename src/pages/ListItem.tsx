@@ -174,39 +174,39 @@ const ListItem = () => {
   if (!session || !profile) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen gradient-mesh">
       <Header user={session.user} profile={profile} />
 
-      <main className="container py-6 max-w-2xl">
-        <Card>
+      <main className="container py-8 max-w-3xl animate-fade-in">
+        <Card className="shadow-elegant-lg border-2">
           <CardHeader>
-            <CardTitle>List an Item</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-3xl gradient-primary bg-clip-text text-transparent">List an Item</CardTitle>
+            <CardDescription className="text-base">
               Share what you want to sell, rent, or are looking for. A 10% platform fee applies to all transactions.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Image Upload */}
-              <div className="space-y-2">
-                <Label>Images (Max 5)</Label>
+              <div className="space-y-3">
+                <Label className="text-base">Images (Max 5)</Label>
                 <div className="grid grid-cols-3 gap-4">
                   {imagePreviews.map((preview, index) => (
-                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden border">
-                      <img src={preview} alt={`Preview ${index + 1}`} className="w-full h-full object-cover" />
+                    <div key={index} className="relative aspect-square rounded-xl overflow-hidden border-2 shadow-md group">
+                      <img src={preview} alt={`Preview ${index + 1}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                       <button
                         type="button"
                         onClick={() => removeImage(index)}
-                        className="absolute top-1 right-1 p-1 bg-destructive text-destructive-foreground rounded-full hover:opacity-80"
+                        className="absolute top-2 right-2 p-1.5 bg-destructive text-destructive-foreground rounded-full hover:scale-110 transition-transform shadow-lg"
                       >
                         <X className="h-4 w-4" />
                       </button>
                     </div>
                   ))}
                   {images.length < 5 && (
-                    <label className="aspect-square rounded-lg border-2 border-dashed border-muted-foreground/25 hover:border-muted-foreground/50 transition-colors cursor-pointer flex flex-col items-center justify-center">
-                      <Upload className="h-8 w-8 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground mt-2">Upload</span>
+                    <label className="aspect-square rounded-xl border-2 border-dashed border-primary/30 hover:border-primary/60 hover:bg-primary/5 transition-smooth cursor-pointer flex flex-col items-center justify-center group">
+                      <Upload className="h-10 w-10 text-primary/60 group-hover:text-primary group-hover:scale-110 transition-smooth" />
+                      <span className="text-sm text-muted-foreground mt-2 font-medium">Upload</span>
                       <input
                         type="file"
                         accept="image/*"
