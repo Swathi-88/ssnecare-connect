@@ -119,91 +119,99 @@ const Marketplace = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen gradient-mesh">
       <Header user={session.user} profile={profile} />
 
-      <main className="container py-6 space-y-6">
+      <main className="container py-8 space-y-8 animate-fade-in">
         {/* Search Bar */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="relative group">
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground transition-colors group-hover:text-primary" />
           <Input
             placeholder="Search for items..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-12"
+            className="pl-12 h-14 text-base shadow-elegant transition-smooth hover:shadow-elegant-lg focus:shadow-glow border-2"
           />
         </div>
 
-        {/* Category Tabs */}
+         {/* Category Tabs */}
         <Tabs value={category} onValueChange={setCategory}>
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="sell">For Sale</TabsTrigger>
-            <TabsTrigger value="rent">For Rent</TabsTrigger>
-            <TabsTrigger value="buy">Looking For</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 h-14 p-1 bg-card shadow-elegant">
+            <TabsTrigger value="all" className="transition-smooth data-[state=active]:shadow-md data-[state=active]:gradient-primary data-[state=active]:text-white">All</TabsTrigger>
+            <TabsTrigger value="sell" className="transition-smooth data-[state=active]:shadow-md data-[state=active]:gradient-primary data-[state=active]:text-white">For Sale</TabsTrigger>
+            <TabsTrigger value="rent" className="transition-smooth data-[state=active]:shadow-md data-[state=active]:gradient-primary data-[state=active]:text-white">For Rent</TabsTrigger>
+            <TabsTrigger value="buy" className="transition-smooth data-[state=active]:shadow-md data-[state=active]:gradient-primary data-[state=active]:text-white">Looking For</TabsTrigger>
           </TabsList>
 
-          <TabsContent value={category} className="mt-6">
+          <TabsContent value={category} className="mt-8">
             {loading ? (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+              <div className="text-center py-16">
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent mx-auto shadow-glow"></div>
               </div>
             ) : filteredItems.length === 0 ? (
-              <div className="text-center py-12 space-y-4">
-                <Package className="h-16 w-16 text-muted-foreground mx-auto" />
-                <div>
-                  <h3 className="font-semibold text-lg">No items found</h3>
-                  <p className="text-muted-foreground">
+              <Card className="py-20 text-center shadow-elegant-lg glass border-2">
+                <div className="relative inline-block">
+                  <Package className="h-20 w-20 text-primary mx-auto mb-6 animate-float" />
+                  <div className="absolute inset-0 blur-2xl bg-primary/20 animate-pulse" />
+                </div>
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-2xl">No items found</h3>
+                  <p className="text-muted-foreground text-lg">
                     {searchQuery
                       ? "Try adjusting your search"
                       : "Be the first to list an item!"}
                   </p>
                 </div>
-                <Button onClick={() => navigate("/list-item")} className="bg-gradient-to-r from-primary to-secondary">
+                <Button onClick={() => navigate("/list-item")} className="mt-8 h-12 px-8 gradient-primary shadow-glow hover:shadow-xl transition-smooth text-base">
                   List an Item
                 </Button>
-              </div>
+              </Card>
             ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredItems.map((item) => (
+              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredItems.map((item, index) => (
                   <Card
                     key={item.id}
-                    className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer hover:-translate-y-1"
+                    className="overflow-hidden shadow-elegant hover:shadow-glow transition-smooth cursor-pointer group animate-fade-in border-2"
+                    style={{ animationDelay: `${index * 0.05}s` }}
                     onClick={() => navigate(`/item/${item.id}`)}
                   >
-                    <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 relative overflow-hidden">
+                    <div className="aspect-square bg-gradient-to-br from-muted via-muted/80 to-muted/50 relative overflow-hidden">
                       {item.image_urls?.[0] ? (
-                        <img
-                          src={item.image_urls[0]}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                        />
+                        <>
+                          <img
+                            src={item.image_urls[0]}
+                            alt={item.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        </>
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Package className="h-16 w-16 text-muted-foreground" />
+                        <div className="w-full h-full flex items-center justify-center relative">
+                          <div className="absolute inset-0 gradient-mesh opacity-30" />
+                          <Package className="h-20 w-20 text-muted-foreground/40 relative z-10" />
                         </div>
                       )}
                       <Badge
-                        className={`absolute top-2 right-2 ${getCategoryColor(item.category)}`}
+                        className={`absolute top-3 right-3 ${getCategoryColor(item.category)} shadow-lg backdrop-blur-sm transition-smooth`}
                       >
                         {item.category === "buy" ? "Looking For" : `For ${item.category}`}
                       </Badge>
                     </div>
-                    <CardHeader>
-                      <CardTitle className="line-clamp-1">{item.title}</CardTitle>
-                      <CardDescription className="line-clamp-2">
+                    <CardHeader className="space-y-3">
+                      <CardTitle className="line-clamp-1 group-hover:text-primary transition-colors text-xl">{item.title}</CardTitle>
+                      <CardDescription className="line-clamp-2 text-base">
                         {item.description}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
-                        <p className="text-2xl font-bold text-primary">₹{item.price}</p>
+                        <p className="text-3xl font-bold gradient-primary bg-clip-text text-transparent">₹{item.price}</p>
                         {item.condition && (
-                          <Badge variant="outline">{item.condition}</Badge>
+                          <Badge variant="outline" className="transition-smooth hover:bg-primary/10">{item.condition}</Badge>
                         )}
                       </div>
                     </CardContent>
-                    <CardFooter className="text-sm text-muted-foreground">
+                    <CardFooter className="text-sm text-muted-foreground border-t pt-4">
                       by {item.profiles?.full_name || "Anonymous"}
                     </CardFooter>
                   </Card>

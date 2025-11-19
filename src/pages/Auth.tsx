@@ -157,14 +157,15 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 p-4">
-      <Card className="w-full max-w-md shadow-2xl">
-        <CardHeader className="text-center space-y-2">
-          <div className="mx-auto w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mb-2">
-            <ShoppingBag className="w-6 h-6 text-white" />
+    <div className="min-h-screen flex items-center justify-center gradient-mesh p-4 animate-fade-in">
+      <Card className="w-full max-w-md shadow-elegant-lg border-2">
+        <CardHeader className="text-center space-y-4">
+          <div className="mx-auto w-16 h-16 gradient-primary rounded-2xl flex items-center justify-center mb-2 shadow-glow relative">
+            <ShoppingBag className="w-8 h-8 text-white" />
+            <div className="absolute inset-0 gradient-primary rounded-2xl blur-lg opacity-50 animate-pulse" />
           </div>
-          <CardTitle className="text-2xl font-bold">Dripster</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-3xl font-bold gradient-primary bg-clip-text text-transparent">Dripster</CardTitle>
+          <CardDescription className="text-base">
             {isSignUp ? "Create your account" : "Sign in to your account"}
           </CardDescription>
         </CardHeader>
@@ -203,12 +204,12 @@ const Auth = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-primary to-secondary"
+                className="w-full h-12 gradient-primary shadow-glow hover:shadow-xl transition-smooth text-base"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     Sending code...
                   </>
                 ) : (
@@ -331,7 +332,7 @@ const Auth = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-primary to-secondary"
+                className="w-full h-12 gradient-primary shadow-glow hover:shadow-xl transition-smooth text-base"
                 disabled={isLoading}
               >
                 {isLoading ? (

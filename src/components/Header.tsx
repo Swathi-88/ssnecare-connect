@@ -28,48 +28,49 @@ const Header = ({ user, profile }: HeaderProps) => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b glass shadow-elegant">
+      <div className="container flex h-20 items-center justify-between">
         <button
           onClick={() => navigate("/")}
-          className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+          className="flex items-center space-x-3 hover:opacity-80 transition-smooth group"
         >
-          <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-            <ShoppingBag className="w-5 h-5 text-white" />
+          <div className="w-12 h-12 gradient-primary rounded-2xl flex items-center justify-center shadow-glow relative">
+            <ShoppingBag className="w-6 h-6 text-white" />
+            <div className="absolute inset-0 gradient-primary rounded-2xl blur-lg opacity-50 group-hover:opacity-100 transition-opacity" />
           </div>
-          <span className="font-bold text-xl hidden sm:inline">Dripster</span>
+          <span className="font-bold text-2xl hidden sm:inline gradient-primary bg-clip-text text-transparent">Dripster</span>
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/search")}
-            className="hover:bg-primary/10"
+            className="hover:bg-primary/10 transition-smooth h-11 w-11"
           >
             <Search className="h-5 w-5" />
           </Button>
 
           <Button
             onClick={() => navigate("/list-item")}
-            className="bg-gradient-to-r from-primary to-secondary hidden sm:flex"
+            className="gradient-primary shadow-glow hover:shadow-xl transition-smooth hidden sm:flex h-11"
           >
-            <PlusCircle className="mr-2 h-4 w-4" />
+            <PlusCircle className="mr-2 h-5 w-5" />
             List Item
           </Button>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                <Avatar>
+              <Button variant="ghost" className="relative h-11 w-11 rounded-full transition-smooth hover:ring-2 hover:ring-primary/20">
+                <Avatar className="h-10 w-10">
                   <AvatarImage src={profile?.avatar_url} />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-white">
+                  <AvatarFallback className="gradient-primary text-white font-semibold">
                     {profile?.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end">
+            <DropdownMenuContent className="w-56 shadow-elegant-lg border-2" align="end">
               <DropdownMenuLabel>
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium">{profile?.full_name || "User"}</p>
