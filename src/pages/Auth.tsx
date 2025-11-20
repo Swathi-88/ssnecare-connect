@@ -164,7 +164,7 @@ const Auth = () => {
             <ShoppingBag className="w-8 h-8 text-white" />
             <div className="absolute inset-0 gradient-primary rounded-2xl blur-lg opacity-50 animate-pulse" />
           </div>
-          <CardTitle className="text-3xl font-bold gradient-primary bg-clip-text text-transparent">Dripster</CardTitle>
+          <CardTitle className="text-3xl font-bold text-primary">Dripster</CardTitle>
           <CardDescription className="text-base">
             {isSignUp ? "Create your account" : "Sign in to your account"}
           </CardDescription>

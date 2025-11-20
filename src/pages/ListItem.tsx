@@ -180,7 +180,7 @@ const ListItem = () => {
       <main className="container py-8 max-w-3xl animate-fade-in">
         <Card className="shadow-elegant-lg border-2">
           <CardHeader>
-            <CardTitle className="text-3xl gradient-primary bg-clip-text text-transparent">List an Item</CardTitle>
+            <CardTitle className="text-3xl text-primary">List an Item</CardTitle>
             <CardDescription className="text-base">
               Share what you want to sell, rent, or are looking for. A 10% platform fee applies to all transactions.
             </CardDescription>
