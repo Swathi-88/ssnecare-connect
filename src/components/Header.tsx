@@ -38,7 +38,7 @@ const Header = ({ user, profile }: HeaderProps) => {
             <ShoppingBag className="w-6 h-6 text-white" />
             <div className="absolute inset-0 gradient-primary rounded-2xl blur-lg opacity-50 group-hover:opacity-100 transition-opacity" />
           </div>
-          <span className="font-bold text-2xl hidden sm:inline gradient-primary bg-clip-text text-transparent">Dripster</span>
+          <span className="font-bold text-2xl hidden sm:inline text-primary">Dripster</span>
         </button>
 
         <div className="flex items-center gap-3">

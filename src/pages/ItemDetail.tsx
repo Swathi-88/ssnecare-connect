@@ -203,9 +203,9 @@ const ItemDetail = () => {
               <Badge className={`mb-3 ${getCategoryColor(item.category)} shadow-md backdrop-blur-sm text-base px-4 py-1`}>
                 {item.category === "buy" ? "Looking For" : `For ${item.category}`}
               </Badge>
-              <h1 className="text-4xl font-bold mb-4 gradient-primary bg-clip-text text-transparent">{item.title}</h1>
+              <h1 className="text-4xl font-bold mb-4 text-primary">{item.title}</h1>
               <div className="mb-6">
-                <p className="text-5xl font-bold gradient-primary bg-clip-text text-transparent">₹{item.price}</p>
+                <p className="text-5xl font-bold text-primary">₹{item.price}</p>
                 {item.category !== "buy" && (
                   <p className="text-sm text-muted-foreground mt-2">
                     Seller receives: ₹{(item.price * 0.9).toFixed(2)} (after 10% platform fee)
