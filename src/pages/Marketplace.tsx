@@ -205,7 +205,7 @@ const Marketplace = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
-                        <p className="text-3xl font-bold text-primary">₹{item.price}</p>
+                        <p className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/90 to-secondary bg-clip-text text-transparent">₹{item.price}</p>
                         {item.condition && (
                           <Badge variant="outline" className="transition-smooth hover:bg-primary/10">{item.condition}</Badge>
                         )}

@@ -154,7 +154,7 @@ const Profile = () => {
                 </Button>
               </div>
               <div className="flex-1">
-                <CardTitle className="text-3xl text-primary">{profile.full_name || "Anonymous"}</CardTitle>
+                <CardTitle className="text-3xl bg-gradient-to-r from-primary via-primary/90 to-secondary bg-clip-text text-transparent">{profile.full_name || "Anonymous"}</CardTitle>
                 <CardDescription className="text-base">{session.user.email}</CardDescription>
               </div>
             </div>

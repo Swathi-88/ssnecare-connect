@@ -37,6 +37,13 @@ const Auth = () => {
       return;
     }
 
+    // For sign in, just proceed with password authentication
+    if (!isSignUp) {
+      await handleSignIn();
+      return;
+    }
+
+    // For sign up, send OTP
     setIsLoading(true);
 
     try {
@@ -73,13 +80,7 @@ const Auth = () => {
       if (response.error) throw response.error;
 
       toast.success("Email verified successfully!");
-      
-      if (isSignUp) {
-        setStep("details");
-      } else {
-        // For sign in, proceed directly to password
-        await handleSignIn();
-      }
+      setStep("details");
     } catch (error: any) {
       toast.error(error.message || "Invalid verification code");
     } finally {
@@ -164,7 +165,7 @@ const Auth = () => {
             <ShoppingBag className="w-8 h-8 text-white" />
             <div className="absolute inset-0 gradient-primary rounded-2xl blur-lg opacity-50 animate-pulse" />
           </div>
-          <CardTitle className="text-3xl font-bold text-primary">Dripster</CardTitle>
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/90 to-secondary bg-clip-text text-transparent">Dripster</CardTitle>
           <CardDescription className="text-base">
             {isSignUp ? "Create your account" : "Sign in to your account"}
           </CardDescription>
