@@ -39,6 +39,13 @@ const handler = async (req: Request): Promise<Response> => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     console.log("Generated OTP for", email);
 
+    // Hash the OTP before storing (security best practice)
+    const encoder = new TextEncoder();
+    const data = encoder.encode(otp);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const otpHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
     // Clean up old OTPs for this email
     await fetch(`${SUPABASE_URL}/rest/v1/email_verifications?email=eq.${email}`, {
       method: "DELETE",
@@ -48,7 +55,7 @@ const handler = async (req: Request): Promise<Response> => {
       },
     });
 
-    // Store OTP in database (expires in 10 minutes)
+    // Store hashed OTP in database (expires in 10 minutes)
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const insertResponse = await fetch(`${SUPABASE_URL}/rest/v1/email_verifications`, {
       method: "POST",
@@ -60,9 +67,10 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         email,
-        otp_code: otp,
+        otp_hash: otpHash,
         expires_at: expiresAt,
         verified: false,
+        attempts: 0,
       }),
     });
 

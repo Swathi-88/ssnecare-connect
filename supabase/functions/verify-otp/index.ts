@@ -25,11 +25,17 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Verifying OTP for email:", email);
 
+    // Hash the submitted OTP for comparison
+    const encoder = new TextEncoder();
+    const data = encoder.encode(otp);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const otpHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
     // Find the OTP record
     const now = new Date().toISOString();
     const queryParams = new URLSearchParams({
       email: `eq.${email}`,
-      otp_code: `eq.${otp}`,
       verified: `eq.false`,
       expires_at: `gt.${now}`,
     });
@@ -65,6 +71,48 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const verification = verifications[0];
+
+    // Rate limiting: Check if too many attempts
+    if (verification.attempts >= 5) {
+      console.log("Too many OTP attempts for:", email);
+      return new Response(
+        JSON.stringify({ error: "Too many attempts. Please request a new code." }),
+        {
+          status: 429,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Verify the hashed OTP matches
+    if (verification.otp_hash !== otpHash) {
+      // Increment attempt counter
+      await fetch(
+        `${SUPABASE_URL}/rest/v1/email_verifications?id=eq.${verification.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "apikey": SUPABASE_SERVICE_ROLE_KEY,
+            "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal",
+          },
+          body: JSON.stringify({ 
+            attempts: verification.attempts + 1,
+            last_attempt_at: new Date().toISOString()
+          }),
+        }
+      );
+
+      console.log("Invalid OTP provided");
+      return new Response(
+        JSON.stringify({ error: "Invalid OTP code" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
 
     // Mark as verified
     const updateResponse = await fetch(
