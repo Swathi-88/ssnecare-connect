@@ -1,6 +1,8 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
+const GMAIL_CLIENT_ID = Deno.env.get("GMAIL_CLIENT_ID")!;
+const GMAIL_CLIENT_SECRET = Deno.env.get("GMAIL_CLIENT_SECRET")!;
+const GMAIL_REFRESH_TOKEN = Deno.env.get("GMAIL_REFRESH_TOKEN")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
@@ -12,6 +14,74 @@ const corsHeaders = {
 
 interface SendOTPRequest {
   email: string;
+}
+
+// Get a fresh access token using the refresh token
+async function getAccessToken(): Promise<string> {
+  const response = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      client_id: GMAIL_CLIENT_ID,
+      client_secret: GMAIL_CLIENT_SECRET,
+      refresh_token: GMAIL_REFRESH_TOKEN,
+      grant_type: "refresh_token",
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    console.error("Failed to get access token:", error);
+    throw new Error("Failed to get Gmail access token");
+  }
+
+  const data = await response.json();
+  return data.access_token;
+}
+
+// Send email using Gmail API
+async function sendEmailWithGmail(to: string, subject: string, htmlContent: string): Promise<void> {
+  const accessToken = await getAccessToken();
+  
+  // Create the email in MIME format
+  const email = [
+    `To: ${to}`,
+    `Subject: ${subject}`,
+    `MIME-Version: 1.0`,
+    `Content-Type: text/html; charset=utf-8`,
+    ``,
+    htmlContent,
+  ].join("\r\n");
+
+  // Base64 URL encode the email
+  const encodedEmail = btoa(email)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+
+  const response = await fetch(
+    "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        raw: encodedEmail,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const error = await response.text();
+    console.error("Gmail API error:", error);
+    throw new Error("Failed to send email via Gmail");
+  }
+
+  console.log("Email sent successfully via Gmail API");
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -79,45 +149,26 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Failed to store OTP");
     }
 
-    // Send email with OTP using Resend API
-    const emailResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "Dripster <onboarding@resend.dev>",
-        to: [email],
-        subject: "Your Dripster Verification Code",
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #333; margin-bottom: 20px;">Verify Your Email</h2>
-            <p style="color: #666; font-size: 16px; line-height: 1.5;">
-              Welcome to Dripster! Please use the following verification code to complete your signup:
-            </p>
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 32px; font-weight: bold; text-align: center; padding: 20px; margin: 30px 0; border-radius: 8px; letter-spacing: 8px;">
-              ${otp}
-            </div>
-            <p style="color: #666; font-size: 14px;">
-              This code will expire in 10 minutes.
-            </p>
-            <p style="color: #999; font-size: 12px; margin-top: 30px;">
-              If you didn't request this code, please ignore this email.
-            </p>
-          </div>
-        `,
-      }),
-    });
+    // Send email with OTP using Gmail API
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #333; margin-bottom: 20px;">Verify Your Email</h2>
+        <p style="color: #666; font-size: 16px; line-height: 1.5;">
+          Welcome to Dripster! Please use the following verification code to complete your signup:
+        </p>
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 32px; font-weight: bold; text-align: center; padding: 20px; margin: 30px 0; border-radius: 8px; letter-spacing: 8px;">
+          ${otp}
+        </div>
+        <p style="color: #666; font-size: 14px;">
+          This code will expire in 10 minutes.
+        </p>
+        <p style="color: #999; font-size: 12px; margin-top: 30px;">
+          If you didn't request this code, please ignore this email.
+        </p>
+      </div>
+    `;
 
-    if (!emailResponse.ok) {
-      const errorData = await emailResponse.json();
-      console.error("Resend API error:", errorData);
-      throw new Error("Failed to send email");
-    }
-
-    const emailData = await emailResponse.json();
-    console.log("Email sent successfully:", emailData);
+    await sendEmailWithGmail(email, "Your Dripster Verification Code", htmlContent);
 
     return new Response(
       JSON.stringify({ success: true, message: "OTP sent to your email" }),
